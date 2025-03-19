@@ -13,12 +13,12 @@ function TaskCard({ tasksData, selectedProject }) {
     description: "",
     project: selectedProject ? selectedProject.projectId : "",
   });
+  const [isEditingStatus, setIsEditingStatus] = useState(false);
 
   const handleCardClick = (task) => {
     setSelectedTask(task);
   };
 
-  // Clear the selected task when a new project is selected
   useEffect(() => {
     setSelectedTask(null);
     setNewTask((prevTask) => ({
@@ -27,10 +27,9 @@ function TaskCard({ tasksData, selectedProject }) {
     }));
   }, [selectedProject]);
 
-  // Filter tasks based on the selected project's ID
   const filteredTasks = selectedProject
     ? tasksData.filter((task) => task.project === selectedProject.projectId)
-    : []; // Return an empty array if no project is selected
+    : [];
 
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
@@ -46,6 +45,26 @@ function TaskCard({ tasksData, selectedProject }) {
     handleCloseModal();
   };
 
+  const getAlertColor = (status) => {
+    switch (status.toLowerCase()) {
+      case "completed":
+        return "success";
+      case "not started":
+        return "secondary";
+      case "in-progress":
+        return "warning";
+      default:
+        return "light";
+    }
+  };
+
+  const handleStatusChange = (task, newStatus) => {
+    task.status = newStatus;
+    setIsEditingStatus(false);
+    // Here you might want to update the task in your data source
+    console.log("Updated Task Status:", task);
+  };
+
   return (
     <div className="container-fluid">
       <div className="row no-gutters">
@@ -57,35 +76,88 @@ function TaskCard({ tasksData, selectedProject }) {
             overflowY: "auto",
           }}
         >
-          {filteredTasks.length > 0 ? (
-            filteredTasks.map((task, index) => (
-              <div
-                key={index}
-                className="card mb-4"
-                style={{ cursor: "pointer" }}
-                onClick={() => handleCardClick(task)}
+          {selectedProject && (
+            <>
+              <Button
+                onClick={handleShowModal}
+                className="btn-custom mb-3 w-100"
               >
-                <div className="card-body">
-                  <h4 className="card-title">Title: {task.title}</h4>
-                  <h5 className="card-subtitle mb-2 text-muted">
-                    Due Date: {new Date(task.dueDate).toLocaleDateString()}
-                  </h5>
-                  <h5 className="card-subtitle mb-2 text-muted">
-                    Assignee: {task.assignTo}
-                  </h5>
-                  <h5 className="card-subtitle mb-2 text-muted">
-                    Status: {task.status}
-                  </h5>
-                  <h5 className="card-subtitle mb-2 text-muted">
-                    Estimated Duration: {task.estimateDuration} hours
-                  </h5>
-                </div>
-              </div>
-            ))
-          ) : (
-            <Button onClick={handleShowModal} className="btn-custom">
-              Add New Task
-            </Button>
+                Add New Task
+              </Button>
+              {filteredTasks.length > 0 ? (
+                filteredTasks.map((task, index) => (
+                  <div
+                    key={index}
+                    className="card mb-4"
+                    style={{ cursor: "pointer", position: "relative" }}
+                    onClick={() => handleCardClick(task)}
+                  >
+                    <div className="d-flex align-items-center">
+                      <div
+                        className="card-body"
+                        style={{ textAlign: "left", flex: 1 }}
+                      >
+                        <h4 className="card-title">Title: {task.title}</h4>
+                        <h5 className="card-subtitle mb-2 text-muted">
+                          Due Date:{" "}
+                          {new Date(task.dueDate).toLocaleDateString()}
+                        </h5>
+                        <h5 className="card-subtitle mb-2 text-muted">
+                          Assignee: {task.assignTo}
+                        </h5>
+                        <h5 className="card-subtitle mb-2 text-muted">
+                          Status:{" "}
+                          {isEditingStatus && selectedTask === task ? (
+                            <Form.Control
+                              as="select"
+                              value={task.status}
+                              onChange={(e) =>
+                                handleStatusChange(task, e.target.value)
+                              }
+                              onBlur={() => setIsEditingStatus(false)}
+                              style={{
+                                width: "200px", // Set the width to 200px
+                                display: "inline-block",
+                                verticalAlign: "middle",
+                              }}
+                            >
+                              <option value="not started">Not Started</option>
+                              <option value="in-progress">In-Progress</option>
+                              <option value="completed">Completed</option>
+                            </Form.Control>
+                          ) : (
+                            <span
+                              onClick={() => {
+                                setSelectedTask(task);
+                                setIsEditingStatus(true);
+                              }}
+                              style={{ cursor: "pointer" }}
+                            >
+                              {task.status}
+                            </span>
+                          )}
+                        </h5>
+                        <h5 className="card-subtitle mb-2 text-muted">
+                          Estimated Duration: {task.estimateDuration} hours
+                        </h5>
+                      </div>
+                      <div
+                        className={`alert alert-${getAlertColor(task.status)}`}
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          borderRadius: "50%",
+                          marginLeft: "10px",
+                          marginRight: "50px",
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>No tasks available for this project.</p>
+              )}
+            </>
           )}
         </div>
         <div
@@ -156,12 +228,17 @@ function TaskCard({ tasksData, selectedProject }) {
             <Form.Group controlId="formStatus">
               <Form.Label>Status</Form.Label>
               <Form.Control
-                type="text"
+                as="select"
                 name="status"
                 value={newTask.status}
                 onChange={handleInputChange}
                 required
-              />
+              >
+                <option value="">Select Status</option>
+                <option value="not started">Not Started</option>
+                <option value="in-progress">In-Progress</option>
+                <option value="completed">Completed</option>
+              </Form.Control>
             </Form.Group>
             <Form.Group controlId="formEstimateDuration">
               <Form.Label>Estimated Duration (hours)</Form.Label>
@@ -183,7 +260,8 @@ function TaskCard({ tasksData, selectedProject }) {
                 required
               />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <br />
+            <Button variant="custom" type="submit" className="btn-custom">
               Save Task
             </Button>
           </Form>

@@ -36,18 +36,11 @@ function DropDown({ projectsData, selectedProject, setSelectedProject }) {
 
   return (
     <div className="d-flex justify-content-center">
-      <div className="dropdown" style={{ width: "90%" }}>
+      <div className="dropdown-container">
         <br />
         <div className="d-flex justify-content-between mb-3">
           <h5>
-            Project Name:{" "}
-            {selectedProject ? (
-              selectedProject.projectName
-            ) : (
-              <Button onClick={handleShowModal} className="btn-custom">
-                Add New Project
-              </Button>
-            )}
+            Project Name: {selectedProject ? selectedProject.projectName : "-"}
           </h5>
           <h5>
             Project ID: {selectedProject ? selectedProject.projectId : "-"}
@@ -58,45 +51,55 @@ function DropDown({ projectsData, selectedProject, setSelectedProject }) {
           </h5>
           <h5>Workload: {selectedProject ? selectedProject.workload : "-"}</h5>
           <h5>
-            Completion Time:{" "}
+            Completion Time/Hours:{" "}
             {selectedProject ? selectedProject.completionTime : "-"}
           </h5>
         </div>
         <br />
-        <button
-          className="btn btn-secondary dropdown-toggle w-100"
-          type="button"
-          id="dropdownMenuButton"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          {selectedProject ? selectedProject.projectName : "Select Project"}
-        </button>
-        <ul
-          className="dropdown-menu w-100"
-          aria-labelledby="dropdownMenuButton"
-        >
-          <li>
-            <a
-              className="dropdown-item"
-              href="#"
-              onClick={() => handleSelect(null)}
+        <div className="d-flex">
+          <div className="dropdown-content">
+            <button
+              className="btn btn-secondary dropdown-toggle w-100"
+              type="button"
+              id="dropdownMenuButton"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
             >
-              -
-            </a>
-          </li>
-          {projectsData.map((project, index) => (
-            <li key={index}>
-              <a
-                className="dropdown-item"
-                href="#"
-                onClick={() => handleSelect(project)}
-              >
-                {project.projectName}
-              </a>
-            </li>
-          ))}
-        </ul>
+              {selectedProject ? selectedProject.projectName : "Select Project"}
+            </button>
+            <ul
+              className="dropdown-menu w-100"
+              aria-labelledby="dropdownMenuButton"
+            >
+              <li>
+                <a
+                  className="dropdown-item"
+                  href="#"
+                  onClick={() => handleSelect(null)}
+                >
+                  - No Selection -
+                </a>
+              </li>
+              {projectsData.map((project, index) => (
+                <li key={index}>
+                  <a
+                    className="dropdown-item"
+                    href="#"
+                    onClick={() => handleSelect(project)}
+                  >
+                    {project.projectName}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <Button
+            onClick={handleShowModal}
+            className="btn-custom button-container"
+          >
+            Add New Project
+          </Button>
+        </div>
       </div>
 
       <Modal show={showModal} onHide={handleCloseModal}>
@@ -161,16 +164,18 @@ function DropDown({ projectsData, selectedProject, setSelectedProject }) {
               </Form.Control>
             </Form.Group>
             <Form.Group controlId="formCompletionTime">
-              <Form.Label>Completion Time (hours)</Form.Label>
+              <Form.Label>Completion Time/Hours (hours)</Form.Label>
               <Form.Control
                 type="number"
                 name="completionTime"
                 value={newProject.completionTime}
                 onChange={handleInputChange}
-                required
+                readOnly
+                placeholder="Calculated By ML"
               />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <br />
+            <Button variant="custom" type="submit" className="btn-custom">
               Save Project
             </Button>
           </Form>
