@@ -1,82 +1,157 @@
 [
   {
+    "_id": "67dae75c9be7d1d604df1001",
     "projectName": "Alpha",
     "projectId": "PA123",
     "teamSize": 10,
-    "budget": "$100,000",
-    "workload": "High",
-    "completionTime": 0
+    "budget": 100000,
+    "workload": "heavy",
+    "completionTime": 50,
+    "tasks": [
+      "67dae75c9be7d1d604df1080",
+      "67dae75c9be7d1d604df1081",
+      "67dae75c9be7d1d604df1082"
+    ]
   },
   {
+    "_id": "67dae75c9be7d1d604df1002",
     "projectName": "Beta",
     "projectId": "PB456",
     "teamSize": 8,
-    "budget": "$80,000",
-    "workload": "Medium",
-    "completionTime": 0
+    "budget": 80000,
+    "workload": "moderate",
+    "completionTime": 40,
+    "tasks": [
+      "67dae75c9be7d1d604df1083",
+      "67dae75c9be7d1d604df1084",
+      "67dae75c9be7d1d604df1085",
+      "67dae75c9be7d1d604df1086"
+    ]
   },
   {
+    "_id": "67dae75c9be7d1d604df1003",
     "projectName": "Gamma",
     "projectId": "PG789",
     "teamSize": 12,
-    "budget": "$120,000",
-    "workload": "Low",
-    "completionTime": 0
+    "budget": 120000,
+    "workload": "light",
+    "completionTime": 30,
+    "tasks": [
+      "67dae75c9be7d1d604df1087",
+      "67dae75c9be7d1d604df1088",
+      "67dae75c9be7d1d604df1089",
+      "67dae75c9be7d1d604df1090",
+      "67dae75c9be7d1d604df1091"
+    ]
   },
   {
+    "_id": "67dae75c9be7d1d604df1004",
     "projectName": "Delta",
     "projectId": "PD101",
     "teamSize": 15,
-    "budget": "$150,000",
-    "workload": "High",
-    "completionTime": 0
+    "budget": 150000,
+    "workload": "heavy",
+    "completionTime": 60,
+    "tasks": [
+      "67dae75c9be7d1d604df1092",
+      "67dae75c9be7d1d604df1093",
+      "67dae75c9be7d1d604df1094",
+      "67dae75c9be7d1d604df1095",
+      "67dae75c9be7d1d604df1096",
+      "67dae75c9be7d1d604df1097"
+    ]
   },
   {
+    "_id": "67dae75c9be7d1d604df1005",
     "projectName": "Epsilon",
     "projectId": "PE202",
     "teamSize": 5,
-    "budget": "$50,000",
-    "workload": "Medium",
-    "completionTime": 0
+    "budget": 50000,
+    "workload": "moderate",
+    "completionTime": 35,
+    "tasks": [
+      "67dae75c9be7d1d604df1098",
+      "67dae75c9be7d1d604df1099",
+      "67dae75c9be7d1d604df1100"
+    ]
   },
   {
+    "_id": "67dae75c9be7d1d604df1006",
     "projectName": "Zeta",
     "projectId": "PZ303",
     "teamSize": 20,
-    "budget": "$200,000",
-    "workload": "High",
-    "completionTime": 0
+    "budget": 200000,
+    "workload": "heavy",
+    "completionTime": 70,
+    "tasks": [
+      "67dae75c9be7d1d604df1101",
+      "67dae75c9be7d1d604df1102",
+      "67dae75c9be7d1d604df1103",
+      "67dae75c9be7d1d604df1104",
+      "67dae75c9be7d1d604df1105",
+      "67dae75c9be7d1d604df1106",
+      "67dae75c9be7d1d604df1107"
+    ]
   },
   {
+    "_id": "67dae75c9be7d1d604df1007",
     "projectName": "Eta",
     "projectId": "PE404",
     "teamSize": 7,
-    "budget": "$70,000",
-    "workload": "Low",
-    "completionTime": 0
+    "budget": 70000,
+    "workload": "light",
+    "completionTime": 25,
+    "tasks": [
+      "67dae75c9be7d1d604df1108",
+      "67dae75c9be7d1d604df1109",
+      "67dae75c9be7d1d604df1110",
+      "67dae75c9be7d1d604df1111"
+    ]
   },
   {
+    "_id": "67dae75c9be7d1d604df1008",
     "projectName": "Theta",
     "projectId": "PT505",
     "teamSize": 9,
-    "budget": "$90,000",
-    "workload": "Medium",
-    "completionTime": 0
+    "budget": 90000,
+    "workload": "moderate",
+    "completionTime": 45,
+    "tasks": [
+      "67dae75c9be7d1d604df1112",
+      "67dae75c9be7d1d604df1113",
+      "67dae75c9be7d1d604df1114",
+      "67dae75c9be7d1d604df1115",
+      "67dae75c9be7d1d604df1116"
+    ]
   },
   {
+    "_id": "67dae75c9be7d1d604df1009",
     "projectName": "Iota",
     "projectId": "PI606",
     "teamSize": 6,
-    "budget": "$60,000",
-    "workload": "Low",
-    "completionTime": 0
+    "budget": 60000,
+    "workload": "light",
+    "completionTime": 20,
+    "tasks": [
+      "67dae75c9be7d1d604df1117",
+      "67dae75c9be7d1d604df1118",
+      "67dae75c9be7d1d604df1119"
+    ]
   },
   {
+    "_id": "67dae75c9be7d1d604df1010",
     "projectName": "Kappa",
     "projectId": "PK707",
     "teamSize": 11,
-    "budget": "$110,000",
-    "workload": "High",
-    "completionTime": 0
+    "budget": 110000,
+    "workload": "heavy",
+    "completionTime": 55,
+    "tasks": [
+      "67dae75c9be7d1d604df1120",
+      "67dae75c9be7d1d604df1121",
+      "67dae75c9be7d1d604df1122",
+      "67dae75c9be7d1d604df1123",
+      "67dae75c9be7d1d604df1124"
+    ]
   }
 ]

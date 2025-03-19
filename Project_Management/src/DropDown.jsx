@@ -10,6 +10,8 @@ function DropDown({ projectsData, selectedProject, setSelectedProject }) {
     teamSize: "",
     budget: "",
     workload: "",
+    completionTime: "",
+    tasks: [],
   });
   const [completionTime, setCompletionTime] = useState("-");
 
@@ -51,7 +53,9 @@ function DropDown({ projectsData, selectedProject, setSelectedProject }) {
             Project ID: {selectedProject ? selectedProject.projectId : "-"}
           </h5>
           <h5>Team Size: {selectedProject ? selectedProject.teamSize : "-"}</h5>
-          <h5>Budget: {selectedProject ? selectedProject.budget : "-"}</h5>
+          <h5>
+            Budget: {selectedProject ? `$${selectedProject.budget}` : "-"}
+          </h5>
           <h5>Workload: {selectedProject ? selectedProject.workload : "-"}</h5>
           <h5>
             Completion Time:{" "}
@@ -144,9 +148,24 @@ function DropDown({ projectsData, selectedProject, setSelectedProject }) {
             <Form.Group controlId="formWorkload">
               <Form.Label>Workload</Form.Label>
               <Form.Control
-                type="text"
+                as="select"
                 name="workload"
                 value={newProject.workload}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Select Workload</option>
+                <option value="light">Light</option>
+                <option value="moderate">Moderate</option>
+                <option value="heavy">Heavy</option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="formCompletionTime">
+              <Form.Label>Completion Time (hours)</Form.Label>
+              <Form.Control
+                type="number"
+                name="completionTime"
+                value={newProject.completionTime}
                 onChange={handleInputChange}
                 required
               />

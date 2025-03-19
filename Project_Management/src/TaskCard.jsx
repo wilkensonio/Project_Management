@@ -7,10 +7,11 @@ function TaskCard({ tasksData, selectedProject }) {
   const [newTask, setNewTask] = useState({
     title: "",
     dueDate: "",
-    assignee: "",
+    assignTo: "",
     status: "",
-    estTime: "",
+    estimateDuration: "",
     description: "",
+    project: selectedProject ? selectedProject.projectId : "",
   });
 
   const handleCardClick = (task) => {
@@ -20,11 +21,15 @@ function TaskCard({ tasksData, selectedProject }) {
   // Clear the selected task when a new project is selected
   useEffect(() => {
     setSelectedTask(null);
+    setNewTask((prevTask) => ({
+      ...prevTask,
+      project: selectedProject ? selectedProject.projectId : "",
+    }));
   }, [selectedProject]);
 
   // Filter tasks based on the selected project's ID
   const filteredTasks = selectedProject
-    ? tasksData.filter((task) => task.projectId === selectedProject.projectId)
+    ? tasksData.filter((task) => task.project === selectedProject.projectId)
     : []; // Return an empty array if no project is selected
 
   const handleShowModal = () => setShowModal(true);
@@ -63,16 +68,16 @@ function TaskCard({ tasksData, selectedProject }) {
                 <div className="card-body">
                   <h4 className="card-title">Title: {task.title}</h4>
                   <h5 className="card-subtitle mb-2 text-muted">
-                    Due Date: {task.dueDate}
+                    Due Date: {new Date(task.dueDate).toLocaleDateString()}
                   </h5>
                   <h5 className="card-subtitle mb-2 text-muted">
-                    Assignee: {task.assignee}
+                    Assignee: {task.assignTo}
                   </h5>
                   <h5 className="card-subtitle mb-2 text-muted">
                     Status: {task.status}
                   </h5>
                   <h5 className="card-subtitle mb-2 text-muted">
-                    Estimated Time: {task.estTime}
+                    Estimated Duration: {task.estimateDuration} hours
                   </h5>
                 </div>
               </div>
@@ -138,12 +143,12 @@ function TaskCard({ tasksData, selectedProject }) {
                 required
               />
             </Form.Group>
-            <Form.Group controlId="formAssignee">
+            <Form.Group controlId="formAssignTo">
               <Form.Label>Assignee</Form.Label>
               <Form.Control
                 type="text"
-                name="assignee"
-                value={newTask.assignee}
+                name="assignTo"
+                value={newTask.assignTo}
                 onChange={handleInputChange}
                 required
               />
@@ -158,12 +163,12 @@ function TaskCard({ tasksData, selectedProject }) {
                 required
               />
             </Form.Group>
-            <Form.Group controlId="formEstTime">
-              <Form.Label>Estimated Time</Form.Label>
+            <Form.Group controlId="formEstimateDuration">
+              <Form.Label>Estimated Duration (hours)</Form.Label>
               <Form.Control
-                type="text"
-                name="estTime"
-                value={newTask.estTime}
+                type="number"
+                name="estimateDuration"
+                value={newTask.estimateDuration}
                 onChange={handleInputChange}
                 required
               />
