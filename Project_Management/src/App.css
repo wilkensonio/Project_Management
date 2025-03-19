@@ -1,54 +1,27 @@
-.container-card {
+.body {
+  background-color: #8f6767;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  height: calc(100vh - 40px);
-  width: calc(100vw - 40px);
-  background-color: #fff;
-  margin: 20px;
-  box-sizing: border-box;
-  border: 2px solid #ccc;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  padding: 20px;
 }
 
-.task-cards-container {
-  display: flex;
-  flex-direction: column;
-  width: 50%;
+.dropdown .btn-secondary.dropdown-toggle {
+  background-color: #8f6767 !important;
+  color: #fff !important;
 }
 
-.task-card {
-  display: flex;
-  justify-content: left;
-  align-items: left;
-  height: 100%;
-  width: 95%;
-  background-color: #fff;
-  margin: 20px;
-  box-sizing: border-box;
-  text-align: left;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  padding: 20px;
-}
-
-.desc-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  height: 50%;
-  width: 50%;
-  background-color: #fff;
-  margin: 20px;
-  box-sizing: border-box;
-  text-align: left;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  padding: 20px;
-}
-
-h4 {
-  margin-right: 100px; /* Space on the right side of paragraphs */
+.btn-custom {
+  background-color: #8f6767 !important;
+  border-color: #8f6767 !important;
+  color: #fff !important;
+  border-radius: 0;
 }

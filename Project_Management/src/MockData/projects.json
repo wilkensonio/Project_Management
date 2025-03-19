@@ -1,0 +1,82 @@
+[
+  {
+    "projectName": "Alpha",
+    "projectId": "PA123",
+    "teamSize": 10,
+    "budget": "$100,000",
+    "workload": "High",
+    "completionTime": 0
+  },
+  {
+    "projectName": "Beta",
+    "projectId": "PB456",
+    "teamSize": 8,
+    "budget": "$80,000",
+    "workload": "Medium",
+    "completionTime": 0
+  },
+  {
+    "projectName": "Gamma",
+    "projectId": "PG789",
+    "teamSize": 12,
+    "budget": "$120,000",
+    "workload": "Low",
+    "completionTime": 0
+  },
+  {
+    "projectName": "Delta",
+    "projectId": "PD101",
+    "teamSize": 15,
+    "budget": "$150,000",
+    "workload": "High",
+    "completionTime": 0
+  },
+  {
+    "projectName": "Epsilon",
+    "projectId": "PE202",
+    "teamSize": 5,
+    "budget": "$50,000",
+    "workload": "Medium",
+    "completionTime": 0
+  },
+  {
+    "projectName": "Zeta",
+    "projectId": "PZ303",
+    "teamSize": 20,
+    "budget": "$200,000",
+    "workload": "High",
+    "completionTime": 0
+  },
+  {
+    "projectName": "Eta",
+    "projectId": "PE404",
+    "teamSize": 7,
+    "budget": "$70,000",
+    "workload": "Low",
+    "completionTime": 0
+  },
+  {
+    "projectName": "Theta",
+    "projectId": "PT505",
+    "teamSize": 9,
+    "budget": "$90,000",
+    "workload": "Medium",
+    "completionTime": 0
+  },
+  {
+    "projectName": "Iota",
+    "projectId": "PI606",
+    "teamSize": 6,
+    "budget": "$60,000",
+    "workload": "Low",
+    "completionTime": 0
+  },
+  {
+    "projectName": "Kappa",
+    "projectId": "PK707",
+    "teamSize": 11,
+    "budget": "$110,000",
+    "workload": "High",
+    "completionTime": 0
+  }
+]
