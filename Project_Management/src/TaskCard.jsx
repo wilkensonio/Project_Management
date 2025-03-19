@@ -179,6 +179,7 @@ function TaskCard({ tasksData, selectedProject }) {
                 <>
                   <h3 className="card-title">{selectedTask.title}</h3>
                   <h4 className="card-title">Description:</h4>
+                  <p className="card-text">click status to change</p>
                   <p className="card-text">{selectedTask.description}</p>
                 </>
               ) : (
