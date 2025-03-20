@@ -4,9 +4,7 @@ chmod +x "$0"
 
 PROJECT_DIR="python" 
 PYTHON_PACKAGE_LIST="requirements.txt"   
-NPM_PACKAGE_LIST="package.json"        
-        
-        
+NPM_PACKAGE_LIST="package.json" 
 
 # Step 1: Install npm packages
 if [ -f "$NPM_PACKAGE_LIST" ]; then
@@ -17,10 +15,9 @@ else
     exit 1
 fi
 
-# Go to the project directory
+# Step 3: Install Python packages
 cd $PROJECT_DIR || { echo "Directory not found!"; exit 1; }
 
-# Step 1: Install Python packages
 if [ -f "$PYTHON_PACKAGE_LIST" ]; then
     echo "Installing Python packages..."
     pip install -r $PYTHON_PACKAGE_LIST
