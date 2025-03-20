@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import "./App.css";
 
-function DropDown({ projectsData, selectedProject, setSelectedProject }) {
+const url = "http://localhost:3000/api";
+
+function DropDown({ selectedProject, setSelectedProject }) {
+  const [projectsData, setProjectsData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newProject, setNewProject] = useState({
     projectName: "",
@@ -14,6 +17,20 @@ function DropDown({ projectsData, selectedProject, setSelectedProject }) {
     tasks: [],
   });
   const [completionTime, setCompletionTime] = useState("-");
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch(`${url}/projects`);
+        const data = await response.json();
+        setProjectsData(data);
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   const handleSelect = (project) => {
     setSelectedProject(project);
@@ -28,9 +45,27 @@ function DropDown({ projectsData, selectedProject, setSelectedProject }) {
     setNewProject({ ...newProject, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("New Project Details:", newProject);
+    try {
+      const response = await fetch(`${url}/projects/create-project`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newProject),
+      });
+
+      if (response.ok) {
+        const createdProject = await response.json();
+        setProjectsData([...projectsData, createdProject]);
+        console.log("Project created successfully:", createdProject);
+      } else {
+        console.error("Failed to create project:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error creating project:", error);
+    }
     handleCloseModal();
   };
 
@@ -43,7 +78,10 @@ function DropDown({ projectsData, selectedProject, setSelectedProject }) {
             Project Name: {selectedProject ? selectedProject.projectName : "-"}
           </h5>
           <h5>
-            Project ID: {selectedProject ? selectedProject.projectId : "-"}
+            Project ID:{" "}
+            {selectedProject
+              ? selectedProject.projectId.slice(-5) // Display last 5 characters
+              : "-"}
           </h5>
           <h5>Team Size: {selectedProject ? selectedProject.teamSize : "-"}</h5>
           <h5>

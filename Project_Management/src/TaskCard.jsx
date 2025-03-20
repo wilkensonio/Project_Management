@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
-function TaskCard({ tasksData, selectedProject }) {
+const url = "http://localhost:3000/api";
+
+function TaskCard({ selectedProject }) {
+  const [tasksData, setTasksData] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [newTask, setNewTask] = useState({
@@ -11,25 +14,39 @@ function TaskCard({ tasksData, selectedProject }) {
     status: "",
     estimateDuration: "",
     description: "",
-    project: selectedProject ? selectedProject.projectId : "",
+    project: selectedProject ? selectedProject._id : "",
   });
   const [isEditingStatus, setIsEditingStatus] = useState(false);
 
-  const handleCardClick = (task) => {
-    setSelectedTask(task);
-  };
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(`${url}/tasks`);
+        const data = await response.json();
+        setTasksData(data);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+
+    fetchTasks();
+  }, []);
 
   useEffect(() => {
     setSelectedTask(null);
     setNewTask((prevTask) => ({
       ...prevTask,
-      project: selectedProject ? selectedProject.projectId : "",
+      project: selectedProject ? selectedProject._id : "",
     }));
   }, [selectedProject]);
 
   const filteredTasks = selectedProject
-    ? tasksData.filter((task) => task.project === selectedProject.projectId)
+    ? tasksData.filter((task) => task.project === selectedProject._id)
     : [];
+
+  const handleCardClick = (task) => {
+    setSelectedTask(task);
+  };
 
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
@@ -39,9 +56,27 @@ function TaskCard({ tasksData, selectedProject }) {
     setNewTask({ ...newTask, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("New Task Details:", newTask);
+    try {
+      const response = await fetch(`${url}/tasks/create-task`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newTask),
+      });
+
+      if (response.ok) {
+        const createdTask = await response.json();
+        setTasksData([...tasksData, createdTask]);
+        console.log("Task created successfully:", createdTask);
+      } else {
+        console.error("Failed to create task:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error creating task:", error);
+    }
     handleCloseModal();
   };
 
@@ -49,7 +84,7 @@ function TaskCard({ tasksData, selectedProject }) {
     switch (status.toLowerCase()) {
       case "completed":
         return "success";
-      case "not started":
+      case "todo":
         return "secondary";
       case "in-progress":
         return "warning";
@@ -58,11 +93,29 @@ function TaskCard({ tasksData, selectedProject }) {
     }
   };
 
-  const handleStatusChange = (task, newStatus) => {
-    task.status = newStatus;
+  const handleStatusChange = async (task, newStatus) => {
+    try {
+      const response = await fetch(`${url}/tasks/${task._id}/status/update`, {
+        method: "PATCH", // Use PATCH or PUT depending on your API design
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (response.ok) {
+        const updatedTask = await response.json();
+        setTasksData((prevTasks) =>
+          prevTasks.map((t) => (t._id === updatedTask._id ? updatedTask : t))
+        );
+        console.log("Task status updated successfully:", updatedTask);
+      } else {
+        console.error("Failed to update task status:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error updating task status:", error);
+    }
     setIsEditingStatus(false);
-    // Here you might want to update the task in your data source
-    console.log("Updated Task Status:", task);
   };
 
   return (
@@ -85,9 +138,9 @@ function TaskCard({ tasksData, selectedProject }) {
                 Add New Task
               </Button>
               {filteredTasks.length > 0 ? (
-                filteredTasks.map((task, index) => (
+                filteredTasks.reverse().map((task, index) => (
                   <div
-                    key={index}
+                    key={task._id || index}
                     className="card mb-4"
                     style={{ cursor: "pointer", position: "relative" }}
                     onClick={() => handleCardClick(task)}
@@ -116,12 +169,12 @@ function TaskCard({ tasksData, selectedProject }) {
                               }
                               onBlur={() => setIsEditingStatus(false)}
                               style={{
-                                width: "200px", // Set the width to 200px
+                                width: "200px",
                                 display: "inline-block",
                                 verticalAlign: "middle",
                               }}
                             >
-                              <option value="not started">Not Started</option>
+                              <option value="todo">To Do</option>
                               <option value="in-progress">In-Progress</option>
                               <option value="completed">Completed</option>
                             </Form.Control>
@@ -236,7 +289,7 @@ function TaskCard({ tasksData, selectedProject }) {
                 required
               >
                 <option value="">Select Status</option>
-                <option value="not started">Not Started</option>
+                <option value="todo">To Do</option>
                 <option value="in-progress">In-Progress</option>
                 <option value="completed">Completed</option>
               </Form.Control>
@@ -258,7 +311,7 @@ function TaskCard({ tasksData, selectedProject }) {
                 name="description"
                 value={newTask.description}
                 onChange={handleInputChange}
-                required
+                rows={2}
               />
             </Form.Group>
             <br />
