@@ -13,10 +13,8 @@ function DropDown({ selectedProject, setSelectedProject }) {
     teamSize: "",
     budget: "",
     workload: "",
-    completionTime: "",
     tasks: [],
   });
-  const [completionTime, setCompletionTime] = useState("-");
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -34,7 +32,6 @@ function DropDown({ selectedProject, setSelectedProject }) {
 
   const handleSelect = (project) => {
     setSelectedProject(project);
-    setCompletionTime(project ? project.completionTime || "-" : "-");
   };
 
   const handleShowModal = () => setShowModal(true);
@@ -59,6 +56,12 @@ function DropDown({ selectedProject, setSelectedProject }) {
       if (response.ok) {
         const createdProject = await response.json();
         setProjectsData([...projectsData, createdProject]);
+
+        const completionTime = await fetchCompletionTime(createdProject._id);
+
+        await updateCompletionTime(createdProject._id, completionTime);
+
+        setSelectedProject({ ...createdProject, completionTime });
       } else {
         console.error("Failed to create project:", response.statusText);
       }
@@ -66,6 +69,43 @@ function DropDown({ selectedProject, setSelectedProject }) {
       console.error("Error creating project:", error);
     }
     handleCloseModal();
+  };
+
+  const fetchCompletionTime = async (_id) => {
+    try {
+      const response = await fetch(`${url}/projects/${_id}/completion-time`);
+      if (response.ok) {
+        const data = await response.json();
+        return data.predictedCompletionTimeHour;
+      } else {
+        console.error("Failed to fetch completion time:", response.statusText);
+        return "-";
+      }
+    } catch (error) {
+      console.error("Error fetching completion time:", error);
+      return "-";
+    }
+  };
+
+  const updateCompletionTime = async (projectId, completionTime) => {
+    try {
+      const response = await fetch(`${url}/projects/update/completion-time`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          projectId,
+          completionTime,
+        }),
+      });
+
+      if (!response.ok) {
+        console.error("Failed to update completion time:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error updating completion time:", error);
+    }
   };
 
   return (
@@ -86,7 +126,7 @@ function DropDown({ selectedProject, setSelectedProject }) {
           </h5>
           <h5>Workload: {selectedProject ? selectedProject.workload : "-"}</h5>
           <h5>
-            Avg Completion Time/Hours:{" "}
+            Completion Time/Hours:{" "}
             {selectedProject ? selectedProject.completionTime : "-"}
           </h5>
         </div>
@@ -197,17 +237,6 @@ function DropDown({ selectedProject, setSelectedProject }) {
                 <option value="moderate">Moderate</option>
                 <option value="heavy">Heavy</option>
               </Form.Control>
-            </Form.Group>
-            <Form.Group controlId="formCompletionTime">
-              <Form.Label>Completion Time/Hours (hours)</Form.Label>
-              <Form.Control
-                type="number"
-                name="completionTime"
-                value={newProject.completionTime}
-                onChange={handleInputChange}
-                readOnly
-                placeholder="Calculated By ML"
-              />
             </Form.Group>
             <br />
             <Button variant="custom" type="submit" className="btn-custom">
