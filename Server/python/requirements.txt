@@ -16,6 +16,7 @@ Faker==37.0.2
 fastparquet==2024.11.0
 Flask==3.1.0
 flask-cors==5.0.1
+flask-cors==5.0.1
 fonttools==4.56.0
 fsspec==2025.3.0
 idna==3.10

@@ -76,7 +76,7 @@ function TaskCard({ selectedProject }) {
           setTasksData([...tasksData, createdTask]);
           setTaskId(createdTask._id);
 
-          const projectTaskUrl = `${url}/projects/update-projects`;
+          const projectTaskUrl = `${url}/projects/update/project`;
           const updateResponse = await fetch(projectTaskUrl, {
             method: "PATCH",
             headers: {
@@ -93,11 +93,6 @@ function TaskCard({ selectedProject }) {
               "Failed to update project with task:",
               updateResponse.statusText
             );
-          } else {
-            setSelectedProject((prevProject) => ({
-              ...prevProject,
-              tasks: [...prevProject.tasks, createdTask._id],
-            }));
           }
         } else {
           console.error("Failed to create task:", taskResponse.statusText);

@@ -1,6 +1,6 @@
 const Project = require("../models/project");
 const bodyParser = require("body-parser");
-const { PythonShell } = require("python-shell");
+const { ObjectId } = require("mongodb"); 
 const fetch = require("node-fetch");
 
 
@@ -77,5 +77,43 @@ exports.getProjectCompletionTime = async (req, res) => {
   } catch (error) {
     console.error("Error:", error.message);
     res.status(500).json({ error: "Failed to get prediction from Flask API" });
+  }
+}; 
+ 
+
+exports.updateProjectTask = async (req, res) => {
+  const { projectId, taskId } = req.body; // Get the projectId and taskId from the URL parameters
+ 
+  try {
+    // Ensure that the projectId and taskId are valid MongoDB ObjectId
+    if (!ObjectId.isValid(projectId) || !ObjectId.isValid(taskId)) {
+      return res.status(400).json({ error: "Invalid projectId or taskId" });
+    } 
+  
+    // Find the project by ID
+    const project = await Project.findById(projectId);
+
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    // Add taskId to the tasks array
+    const update = {
+      $push: {
+        tasks: taskId,  
+      },
+    }; 
+    
+    const result = await Project.updateOne({ _id: projectId }, update);
+    console.log(result, "johdfh") 
+    if (result.modifiedCount === 0) {
+      return res.status(400).json({ error: "Failed to update project tasks" });
+    }
+
+    res.status(200).json({ message: "Task added successfully to the project" });
+  } catch (error) {
+    console.error("Error updating project task:", error);
+    console.log(error, "kjdlkfsldhf")
+    res.status(500).json({ error: "Internal server error" });
   }
 };
