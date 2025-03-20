@@ -3,7 +3,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 
 const url = "http://localhost:3000/api";
 
-async function TaskCard({ selectedProject }) {
+function TaskCard({ selectedProject }) {
   const [tasksData, setTasksData] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -59,35 +59,54 @@ async function TaskCard({ selectedProject }) {
     setNewTask({ ...newTask, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const taskResponse = await fetch(`${url}/tasks/create-task`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newTask),
-      });
+    const createTask = async () => {
+      try {
+        const taskResponse = await fetch(`${url}/tasks/create-task`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newTask),
+        });
 
-      if (taskResponse.ok) {
-        const createdTask = await taskResponse.json();
-        setTasksData([...tasksData, createdTask]);
-        setTaskId(createdTask._id);
-      } else {
-        console.error("Failed to create task:", taskResponse.statusText);
+        if (taskResponse.ok) {
+          const createdTask = await taskResponse.json();
+          setTasksData([...tasksData, createdTask]);
+          setTaskId(createdTask._id);
+
+          const projectTaskUrl = `${url}/projects/${projectId}/project/${projectId}/task`;
+          const updateResponse = await fetch(projectTaskUrl, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ taskId: createdTask._id }),
+          });
+
+          if (!updateResponse.ok) {
+            console.error(
+              "Failed to update project with task:",
+              updateResponse.statusText
+            );
+          } else {
+            setSelectedProject((prevProject) => ({
+              ...prevProject,
+              tasks: [...prevProject.tasks, createdTask._id],
+            }));
+          }
+        } else {
+          console.error("Failed to create task:", taskResponse.statusText);
+        }
+      } catch (error) {
+        console.error("Error creating task or updating project:", error);
       }
-    } catch (error) {
-      console.error("Error creating task:", error);
-    }
-    handleCloseModal();
-  };
+      handleCloseModal();
+    };
 
-  const update = {
-    $push: { tasks: { taskId } },
+    createTask();
   };
-
-  const result = await collection.updateOne(projectId, update);
 
   const getAlertColor = (status) => {
     switch (status.toLowerCase()) {
@@ -102,28 +121,32 @@ async function TaskCard({ selectedProject }) {
     }
   };
 
-  const handleStatusChange = async (task, newStatus) => {
-    try {
-      const response = await fetch(`${url}/tasks/${task._id}/status/update`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
+  const handleStatusChange = (task, newStatus) => {
+    const updateStatus = async () => {
+      try {
+        const response = await fetch(`${url}/tasks/${task._id}/status/update`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        });
 
-      if (response.ok) {
-        const updatedTask = await response.json();
-        setTasksData((prevTasks) =>
-          prevTasks.map((t) => (t._id === updatedTask._id ? updatedTask : t))
-        );
-      } else {
-        console.error("Failed to update task status:", response.statusText);
+        if (response.ok) {
+          const updatedTask = await response.json();
+          setTasksData((prevTasks) =>
+            prevTasks.map((t) => (t._id === updatedTask._id ? updatedTask : t))
+          );
+        } else {
+          console.error("Failed to update task status:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error updating task status:", error);
       }
-    } catch (error) {
-      console.error("Error updating task status:", error);
-    }
-    setIsEditingStatus(false);
+      setIsEditingStatus(false);
+    };
+
+    updateStatus();
   };
 
   return (
@@ -216,7 +239,9 @@ async function TaskCard({ selectedProject }) {
                   </div>
                 ))
               ) : (
-                <p>No tasks available for this project.</p>
+                <div className="center-text">
+                  <p>No tasks available for this project.</p>
+                </div>
               )}
             </>
           )}
