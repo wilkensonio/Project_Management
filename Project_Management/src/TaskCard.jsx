@@ -43,8 +43,6 @@ async function TaskCard({ selectedProject }) {
     setProjectId(selectedProject ? selectedProject._id : "");
   }, [selectedProject]);
 
-  console.log(projectId, "Hellooooo");
-
   const filteredTasks = selectedProject
     ? tasksData.filter((task) => task.project === selectedProject._id)
     : [];
@@ -64,7 +62,6 @@ async function TaskCard({ selectedProject }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // First API call to create a task
       const taskResponse = await fetch(`${url}/tasks/create-task`, {
         method: "POST",
         headers: {
@@ -75,10 +72,8 @@ async function TaskCard({ selectedProject }) {
 
       if (taskResponse.ok) {
         const createdTask = await taskResponse.json();
-        console.log("Created Task Response:", createdTask); // Log the entire response
         setTasksData([...tasksData, createdTask]);
         setTaskId(createdTask._id);
-        console.log("Task created successfully:", createdTask);
       } else {
         console.error("Failed to create task:", taskResponse.statusText);
       }
@@ -93,7 +88,6 @@ async function TaskCard({ selectedProject }) {
   };
 
   const result = await collection.updateOne(projectId, update);
-  console.log(results, taskId, projectId, "This is all the Id's");
 
   const getAlertColor = (status) => {
     switch (status.toLowerCase()) {
@@ -111,7 +105,7 @@ async function TaskCard({ selectedProject }) {
   const handleStatusChange = async (task, newStatus) => {
     try {
       const response = await fetch(`${url}/tasks/${task._id}/status/update`, {
-        method: "PATCH", // Use PATCH or PUT depending on your API design
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -123,7 +117,6 @@ async function TaskCard({ selectedProject }) {
         setTasksData((prevTasks) =>
           prevTasks.map((t) => (t._id === updatedTask._id ? updatedTask : t))
         );
-        console.log("Task status updated successfully:", updatedTask);
       } else {
         console.error("Failed to update task status:", response.statusText);
       }

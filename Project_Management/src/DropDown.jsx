@@ -59,7 +59,6 @@ function DropDown({ selectedProject, setSelectedProject }) {
       if (response.ok) {
         const createdProject = await response.json();
         setProjectsData([...projectsData, createdProject]);
-        console.log("Project created successfully:", createdProject);
       } else {
         console.error("Failed to create project:", response.statusText);
       }
@@ -79,9 +78,7 @@ function DropDown({ selectedProject, setSelectedProject }) {
           </h5>
           <h5>
             Project ID:{" "}
-            {selectedProject
-              ? selectedProject.projectId.slice(-5) // Display last 5 characters
-              : "-"}
+            {selectedProject ? selectedProject.projectId.slice(-5) : "-"}
           </h5>
           <h5>Team Size: {selectedProject ? selectedProject.teamSize : "-"}</h5>
           <h5>
