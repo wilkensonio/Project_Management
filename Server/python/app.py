@@ -6,21 +6,20 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-# Load the saved model and label encoder
+ 
 with open('completion_time_predictor.pkl', 'rb') as f:
     model = pickle.load(f)
 
 with open('label_encoder.pkl', 'rb') as f:
     label_encoder = pickle.load(f)
-
-# Route to predict the completion time
+ 
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Get the data from the POST request
+    
         data = request.get_json()
 
-        # Extract project attributes from the request
+     
         team_size = data['teamSize']
         budget = data['budget']
         workload = data['workload']
@@ -32,8 +31,7 @@ def predict():
 
         # Prepare the input features for prediction
         features = np.array([[team_size, budget, workload_encoded, estimate_duration, tasks]])
-
-        # Predict the completion time
+      
         predicted_completion_time = abs(model.predict(features)[0])
         hour = 0
         if predicted_completion_time >= 3600:
@@ -43,7 +41,7 @@ def predict():
         if hour == 0:
             hour = 1   
     
-        # Return the result as JSON
+      
         return jsonify({"predictedCompletionTimeHour": hour})
 
     except Exception as e:

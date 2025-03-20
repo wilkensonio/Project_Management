@@ -10,12 +10,16 @@ Add project | task | and AI model to predict the completion time
 
 ## Run locally
 
+Clone the repo 
+
+
 From the root folder (Project_Management) of the project
 
 1. Navigate into the Server folder (in the terminal or command line)
     - run command: `./ipackage` (this will install the dependencies needed for the server)
     - open 2 different terminals in the Server folder
-    - run commands: `cd python` and `python app.py` or `python3 app.py` (this will run the python (flask) server)
+    - run commands: `python data_pop_db` (this will create fake data and add it to mongoDB) 
+    - run commands: `cd python` and `python app.py` or `python3 app.py` (this will run the python (flask) server) 
     - run command: `npm run dev` (this runs the node (express) server), this is in the server folder, not the python server
     - verify that servers are running
   

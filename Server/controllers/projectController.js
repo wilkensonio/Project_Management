@@ -118,8 +118,8 @@ exports.updateCompletionTime = async (req, res) => {
   const { projectId, completionTime } = req.body;   
 
   try {
-    // Find the project by its ID
-    const project = await Project.findById(projectId);  // Populate tasks to get task data
+ 
+    const project = await Project.findById(projectId);   
 
     if (!project) {
       return res.status(404).json({ error: "Project not found" });
