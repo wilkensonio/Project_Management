@@ -82,7 +82,7 @@ exports.getProjectCompletionTime = async (req, res) => {
  
 
 exports.updateProjectTask = async (req, res) => {
-  const { projectId, taskId } = req.body; // Get the projectId and taskId from the URL parameters
+  const { projectId, taskId } = req.body; 
  
   try {
     // Ensure that the projectId and taskId are valid MongoDB ObjectId
@@ -104,16 +104,35 @@ exports.updateProjectTask = async (req, res) => {
       },
     }; 
     
-    const result = await Project.updateOne({ _id: projectId }, update);
-    console.log(result, "johdfh") 
+    const result = await Project.updateOne({ _id: projectId }, update); 
     if (result.modifiedCount === 0) {
       return res.status(400).json({ error: "Failed to update project tasks" });
-    }
-
+    } 
     res.status(200).json({ message: "Task added successfully to the project" });
+  } catch (error) { 
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.updateCompletionTime = async (req, res) => {
+  const { projectId, completionTime } = req.body;   
+
+  try {
+    // Find the project by its ID
+    const project = await Project.findById(projectId);  // Populate tasks to get task data
+
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }  
+
+    // Save the updated project
+    const result = await Project.updateOne(
+      { _id: projectId },  
+      { $set: { completionTime: completionTime } }  
+    ); 
+    res.status(200).json({ message: "Project completion time updated successfully", completionTime });
   } catch (error) {
-    console.error("Error updating project task:", error);
-    console.log(error, "kjdlkfsldhf")
+    console.error("Error updating project completion time:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
