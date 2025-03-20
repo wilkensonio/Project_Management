@@ -76,13 +76,16 @@ function TaskCard({ selectedProject }) {
           setTasksData([...tasksData, createdTask]);
           setTaskId(createdTask._id);
 
-          const projectTaskUrl = `${url}/projects/${projectId}/project/${projectId}/task`;
+          const projectTaskUrl = `${url}/projects/update-projects`;
           const updateResponse = await fetch(projectTaskUrl, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ taskId: createdTask._id }),
+            body: JSON.stringify({
+              taskId: createdTask._id,
+              projectId: projectId,
+            }),
           });
 
           if (!updateResponse.ok) {
