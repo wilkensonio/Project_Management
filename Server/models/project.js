@@ -10,7 +10,7 @@ const projectSchema = new mongoose.Schema({
     enum: ["light", "medium", "heavy"],
     default: "light",
   },
-  completionTime: { type: Number, required: true },
+  completionTime: { type: Number, default: 0},
   tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "task" }],
 });
 

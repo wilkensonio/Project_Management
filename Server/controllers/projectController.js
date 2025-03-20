@@ -1,4 +1,8 @@
 const Project = require("../models/project");
+const bodyParser = require("body-parser");
+const { PythonShell } = require("python-shell");
+const fetch = require("node-fetch");
+
 
 exports.createProject = async (req, res) => {
   try {
@@ -18,7 +22,8 @@ exports.getProject = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-};
+}; 
+ 
 
 exports.getAllProjects = async (req, res) => {
   try {
@@ -36,5 +41,41 @@ exports.deleteProject = async (req, res) => {
     res.status(200).json({ message: "Project deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+}; 
+ 
+
+exports.getProjectCompletionTime = async (req, res) => {
+  const project = await Project.findById(req.params.id).populate('tasks');
+  if (!project) return res.status(404).json({ error: "Project not found" });
+
+  const sumDuration = project.tasks.reduce((sum, task) => sum + task.estimateDuration, 0); 
+  const numberOfTasks = project.tasks.length;
+  const projectData = {
+    teamSize: project.teamSize,
+    budget: project.budget,
+    workload: project.workload,
+    estimateDuration: sumDuration,
+    tasks: numberOfTasks,
+  }; 
+ 
+  try {
+    const response = await fetch("http://localhost:5000/predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(projectData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Flask API returned error: ${response.statusText}`);
+    }
+
+    const prediction = await response.json();
+    console.log("Flask API response:", prediction);  
+
+    res.json(prediction);  
+  } catch (error) {
+    console.error("Error:", error.message);
+    res.status(500).json({ error: "Failed to get prediction from Flask API" });
   }
 };
