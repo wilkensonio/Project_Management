@@ -89,7 +89,7 @@ function DropDown({ selectedProject, setSelectedProject }) {
           </h5>
           <h5>Workload: {selectedProject ? selectedProject.workload : "-"}</h5>
           <h5>
-            Completion Time/Hours:{" "}
+            Avg Completion Time/Hours:{" "}
             {selectedProject ? selectedProject.completionTime : "-"}
           </h5>
         </div>

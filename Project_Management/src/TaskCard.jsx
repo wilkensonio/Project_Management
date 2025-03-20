@@ -3,7 +3,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 
 const url = "http://localhost:3000/api";
 
-function TaskCard({ selectedProject }) {
+async function TaskCard({ selectedProject }) {
   const [tasksData, setTasksData] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -17,6 +17,8 @@ function TaskCard({ selectedProject }) {
     project: selectedProject ? selectedProject._id : "",
   });
   const [isEditingStatus, setIsEditingStatus] = useState(false);
+  const [projectId, setProjectId] = useState("");
+  const [taskId, setTaskId] = useState("");
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -38,7 +40,10 @@ function TaskCard({ selectedProject }) {
       ...prevTask,
       project: selectedProject ? selectedProject._id : "",
     }));
+    setProjectId(selectedProject ? selectedProject._id : "");
   }, [selectedProject]);
+
+  console.log(projectId, "Hellooooo");
 
   const filteredTasks = selectedProject
     ? tasksData.filter((task) => task.project === selectedProject._id)
@@ -59,7 +64,8 @@ function TaskCard({ selectedProject }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${url}/tasks/create-task`, {
+      // First API call to create a task
+      const taskResponse = await fetch(`${url}/tasks/create-task`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,18 +73,27 @@ function TaskCard({ selectedProject }) {
         body: JSON.stringify(newTask),
       });
 
-      if (response.ok) {
-        const createdTask = await response.json();
+      if (taskResponse.ok) {
+        const createdTask = await taskResponse.json();
+        console.log("Created Task Response:", createdTask); // Log the entire response
         setTasksData([...tasksData, createdTask]);
+        setTaskId(createdTask._id);
         console.log("Task created successfully:", createdTask);
       } else {
-        console.error("Failed to create task:", response.statusText);
+        console.error("Failed to create task:", taskResponse.statusText);
       }
     } catch (error) {
       console.error("Error creating task:", error);
     }
     handleCloseModal();
   };
+
+  const update = {
+    $push: { tasks: { taskId } },
+  };
+
+  const result = await collection.updateOne(projectId, update);
+  console.log(results, taskId, projectId, "This is all the Id's");
 
   const getAlertColor = (status) => {
     switch (status.toLowerCase()) {
