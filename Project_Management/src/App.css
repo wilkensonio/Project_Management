@@ -1,54 +1,83 @@
-.container-card {
+.body {
+  background-color: #8f6767;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  height: calc(100vh - 40px);
-  width: calc(100vw - 40px);
-  background-color: #fff;
-  margin: 20px;
-  box-sizing: border-box;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  padding: 20px;
+  justify-content: center;
+  align-items: center;
 }
 
-.task-cards-container {
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.dropdown-container .btn-secondary.dropdown-toggle {
+  background-color: #8f6767 !important;
+  border-color: #8f6767 !important;
+  color: #fff !important;
+}
+
+.btn-custom {
+  background-color: #8f6767 !important;
+  border-color: #8f6767 !important;
+  color: #fff !important;
+  border-radius: 0;
+}
+
+.dropdown-container {
+  width: 90%;
+}
+
+.dropdown-content {
+  flex: 0 0 60%;
+  position: relative; /* Ensure the dropdown menu is positioned relative to this container */
+}
+
+.dropdown-menu {
+  width: 100%; /* Match the width of the dropdown button */
+  overflow: hidden; /* Prevent overflow */
+}
+
+.button-container {
+  flex: 0 0 40%;
+  margin-left: 10px;
+}
+
+.card-container {
+  padding-left: 80px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.alert-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-left: 10px;
+  margin-right: 50px;
+}
+
+.task-details-container {
+  padding-right: 80px;
   display: flex;
   flex-direction: column;
-  width: 50%;
+  justify-content: center;
+  align-items: center;
 }
 
-.task-card {
-  display: flex;
-  justify-content: left;
-  align-items: left;
-  height: 100%;
-  width: 95%;
-  background-color: #fff;
-  margin: 20px;
-  box-sizing: border-box;
-  text-align: left;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  padding: 20px;
+.task-details-card {
+  flex: 1;
+  width: 100%;
+  min-height: 585px;
 }
 
-.desc-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  height: 50%;
-  width: 50%;
-  background-color: #fff;
-  margin: 20px;
-  box-sizing: border-box;
-  text-align: left;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  padding: 20px;
+.card-body-center {
+  text-align: center;
 }
 
-h4 {
-  margin-right: 100px; /* Space on the right side of paragraphs */
+.center-text {
+  text-align: center;
 }
