@@ -108,6 +108,18 @@ function DropDown({ selectedProject, setSelectedProject }) {
     }
   };
 
+  function formatMoney(amount, currency = "USD", locale = "en-US") {
+    return amount.toLocaleString(locale, {
+      style: "currency",
+      currency: currency,
+    });
+  }
+
+  // Usage
+  console.log(formatMoney(123456.789)); // Output: $123,456.79
+  console.log(formatMoney(123456.789, "EUR")); // Output: €123,456.79
+  console.log(formatMoney(123456.789, "JPY", "ja-JP")); // Output: ￥123,457
+
   return (
     <div className="d-flex justify-content-center">
       <div className="dropdown-container">
@@ -122,7 +134,7 @@ function DropDown({ selectedProject, setSelectedProject }) {
           </h5>
           <h5>Team Size: {selectedProject ? selectedProject.teamSize : "-"}</h5>
           <h5>
-            Budget: {selectedProject ? `$${selectedProject.budget}` : "-"}
+            Budget: {selectedProject ? `${formatMoney(selectedProject.budget)}` : "-"}
           </h5>
           <h5>Workload: {selectedProject ? selectedProject.workload : "-"}</h5>
           <h5>
